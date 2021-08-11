@@ -1,0 +1,20 @@
+---
+title: "Starbucks Location"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(RDSTK)
+library(dplyr)
+```
+
+## R Markdown
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+location = 'Jl. Restu, Helvetia Tim., Kec. Medan Helvetia, Kota Medan, Sumatera Utara 20124'
+street2coordinates(location)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
