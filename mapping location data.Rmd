@@ -3,33 +3,69 @@ title: "Starbucks Location"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r Import Library}
 library(RDSTK)
 library(dplyr)
+library(leaflet)
 ```
 
 ## R Markdown
-
+#https://www.bps.go.id/linkTableDinamis/view/id/917
 Get latlong data here https://docs.google.com/spreadsheets/d/1VTE-D3Tv5ESdkvYDCi_71rJUOTHZ0HogWO_wZ0QOcrA/edit?usp=sharing
 
-```{r pressure, echo=FALSE}
+```{r Import Data}
 setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
 wage_data <- read.csv("minimum_wage_data.csv", sep=";")
 location_data <- read.csv("city_latlong.csv", sep=",")
 ```
 
 
-```{r}
-wage_data <- wage_data %>%
-  mutate(province=tolower(nama_item_vertical_variabel)) %>% #Create province name & lowercase province name
-   dplyr::filter(nama_tahun == 2016) #Select latest year 
-  
-  
+```{r Data Cleaning}
+wage_data <- wage_data %>% 
+  dplyr::filter(nama_tahun == 2016) %>%
+  dplyr::select(province = nama_item_vertical_variabel,
+                wage=data_content) 
+
+
 
 df <- wage_data %>% 
-  left_join(location_data %>% mutate(province=tolower(admin_name)),by="province") %>% #Merge location and wage data
-  subset(province != "indonesia") #Remove Indonesia as province value
-
+  dplyr::left_join(
+    location_data %>% 
+      mutate(province=toupper(admin_name)) %>%
+      select(province,lat,lng), by = "province"
+      ) %>% 
+  group_by(province) %>% 
+  mutate(rank=row_number()) %>% 
+  ungroup() %>% 
+  dplyr::filter(rank==1) %>%
+  subset(province != "INDONESIA") %>% mutate(wage=as.numeric(wage))
+ 
+# df <- merged_df %>% 
+#   dplyr::select(province=province,lat=lat,lng=lng,wage=data_content) %>% 
+#   summarize(wage=min(wage))
   
+```
+
+
+```{r}
+mybins <- seq(min(df$wage), max(df$wage), by=100000)
+mypalette <- colorBin( palette="YlOrBr", 
+                       domain=df$wage, 
+                       na.color="transparent", bins=mybins)
+
+
+df %>%
+  leaflet() %>% 
+  addTiles() %>%
+  addProviderTiles("CartoDB.Positron") %>% 
+  addCircleMarkers(~lng, ~lat, 
+    fillColor = ~mypalette(wage), fillOpacity = 0.7, color="white", radius=8, stroke=FALSE,
+    label = ~province,
+    labelOptions = labelOptions( style = list("font-weight" = "normal", padding = "3px 8px"), textsize = "13px", direction = "auto")
+  ) %>% 
+  addMarkers(popup=df$province)
+
+
+
 ```
 
