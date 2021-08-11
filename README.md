@@ -1,0 +1,1 @@
+# indonesia-regional-wage-map
