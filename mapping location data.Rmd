@@ -10,11 +10,26 @@ library(dplyr)
 
 ## R Markdown
 
-You can also embed plots, for example:
+Get latlong data here https://docs.google.com/spreadsheets/d/1VTE-D3Tv5ESdkvYDCi_71rJUOTHZ0HogWO_wZ0QOcrA/edit?usp=sharing
 
 ```{r pressure, echo=FALSE}
-location = 'Jl. Restu, Helvetia Tim., Kec. Medan Helvetia, Kota Medan, Sumatera Utara 20124'
-street2coordinates(location)
+setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
+wage_data <- read.csv("minimum_wage_data.csv", sep=";")
+location_data <- read.csv("city_latlong.csv", sep=",")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+wage_data <- wage_data %>%
+  mutate(province=tolower(nama_item_vertical_variabel)) %>% #Create province name & lowercase province name
+   dplyr::filter(nama_tahun == 2016) #Select latest year 
+  
+  
+
+df <- wage_data %>% 
+  left_join(location_data %>% mutate(province=tolower(admin_name)),by="province") %>% #Merge location and wage data
+  subset(province != "indonesia") #Remove Indonesia as province value
+
+  
+```
+
