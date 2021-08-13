@@ -57,7 +57,7 @@ df <- wage_data %>%
 
 
 ```{r}
-mybins <- seq(min(df$wage), max(df$wage), by=400000)
+mybins <- seq(min(df$wage)*0.9, max(df$wage)*1.2, by=500000)
 mypalette <- colorBin( palette="YlOrBr", 
                        domain=df$wage, 
                        na.color="transparent", bins=mybins)
@@ -72,7 +72,18 @@ map = df %>%
     labelOptions = labelOptions( style = list("font-weight" = "normal", padding = "3px 8px"), textsize = "13px", direction = "auto")
   ) %>%  
   addMarkers(popup=paste0(df$province,' : ',
-                          paste('Rp',formatC(df$wage,big.mark=',',format='fg'))))
+                          paste('Rp',formatC(df$wage,big.mark=',',format='fg')))) %>%
+  addLegend(
+        "bottomleft", # Legend position
+        pal=mypalette, # color palette
+        values=~mybins, # legend values
+        opacity = 0.6,
+        title="Wage Range"
+      )
+
+```
+
+```{r}
 
 ```
 
