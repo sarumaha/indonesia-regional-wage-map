@@ -27,63 +27,76 @@ library(htmlwidgets)
 
 
 ```{r Import Data}
-setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
-wage_data <- read.csv("minimum_wage_data.csv", sep=";")
-location_data <- read.csv("city_latlong.csv", sep=",")
+# setwd("/Users/yogisharo/Documents/GitHub/")
+wage_data <- read.csv("indonesia-regional-wage-map/minimum_wage_data.csv", sep = ";")
+location_data <- read.csv("city_latlong.csv", sep = ",")
+
 ```
 
 
 ```{r Data Cleaning}
-wage_data <- wage_data %>% 
+wage_data <- wage_data %>%
   dplyr::filter(nama_tahun == 2016) %>%
   dplyr::select(province = nama_item_vertical_variabel,
-                wage=data_content) 
+                wage = data_content)
 
 
 
-df <- wage_data %>% 
-  dplyr::left_join(
-    location_data %>% 
-      mutate(province=toupper(admin_name)) %>%
-      select(province,lat,lng), by = "province"
-      ) %>% 
-  group_by(province) %>% 
-  mutate(rank=row_number()) %>% 
-  ungroup() %>% 
-  dplyr::filter(rank==1) %>%
-  subset(province != "INDONESIA") %>% mutate(wage=as.numeric(wage))
+df <- wage_data %>%
+  dplyr::left_join(location_data %>%
+                     mutate(province = toupper(admin_name)) %>%
+                     select(province, lat, lng),
+                   by = "province") %>%
+  group_by(province) %>%
+  mutate(rank = row_number()) %>%
+  ungroup() %>%
+  dplyr::filter(rank == 1) %>%
+  subset(province != "INDONESIA") %>% mutate(wage = as.numeric(wage))
   
 ```
 
 
 ```{r}
-mybins <- seq(min(df$wage)*0.9, max(df$wage)*1.2, by=500000)
-mypalette <- colorBin( palette="YlOrBr", 
-                       domain=df$wage, 
-                       na.color="transparent", bins=mybins)
+mybins <- seq(min(df$wage) * 0.9, max(df$wage) * 1.2, by = 500000)
+mypalette <- colorBin(
+  palette = "YlOrBr",
+  domain = df$wage,
+  na.color = "transparent",
+  bins = mybins
+)
 
 map = df %>%
-  leaflet() %>% 
+  leaflet() %>%
   addTiles() %>%
-  addProviderTiles("CartoDB.Positron") %>% 
-  addCircleMarkers(~lng, ~lat, 
-    fillColor = ~mypalette(wage), fillOpacity = 0.7, color="white", radius=8, stroke=FALSE,
-    label = ~province,
-    labelOptions = labelOptions( style = list("font-weight" = "normal", padding = "3px 8px"), textsize = "13px", direction = "auto")
-  ) %>%  
-  addMarkers(popup=paste0(df$province,' : ',
-                          paste('Rp',formatC(df$wage,big.mark=',',format='fg')))) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addCircleMarkers(
+    ~ lng,
+    ~ lat,
+    fillColor = ~ mypalette(wage),
+    fillOpacity = 0.7,
+    color = "white",
+    radius = 8,
+    stroke = FALSE,
+    label = ~ province,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "13px",
+      direction = "auto"
+    )
+  ) %>%
+  addMarkers(popup = paste0(df$province, ' : ',
+                            paste(
+                              'Rp', formatC(df$wage, big.mark = ',', format = 'fg')
+                            ))) %>%
   addLegend(
-        "bottomleft", # Legend position
-        pal=mypalette, # color palette
-        values=~mybins, # legend values
-        opacity = 0.6,
-        title="Wage Range"
-      )
+    "bottomleft",
+    # Legend position
+    pal = mypalette,
+    # color palette
+    values =  ~ mybins,
+    # legend values
+    opacity = 0.6,
+    title = "Wage Range"
+  )
 
 ```
-
-```{r}
-
-```
-
