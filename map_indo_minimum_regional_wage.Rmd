@@ -62,7 +62,6 @@ mypalette <- colorBin( palette="YlOrBr",
                        domain=df$wage, 
                        na.color="transparent", bins=mybins)
 
-
 map = df %>%
   leaflet() %>% 
   addTiles() %>%
@@ -74,8 +73,6 @@ map = df %>%
   ) %>%  
   addMarkers(popup=paste0(df$province,' : ',
                           paste('Rp',formatC(df$wage,big.mark=',',format='fg'))))
-
-
 
 ```
 
