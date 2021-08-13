@@ -57,7 +57,7 @@ df <- wage_data %>%
 
 
 ```{r}
-mybins <- seq(min(df$wage), max(df$wage), by=100000)
+mybins <- seq(min(df$wage), max(df$wage), by=400000)
 mypalette <- colorBin( palette="YlOrBr", 
                        domain=df$wage, 
                        na.color="transparent", bins=mybins)
