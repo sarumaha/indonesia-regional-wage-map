@@ -25,12 +25,13 @@ library(tidyverse)
 library(htmlwidgets)
 ```
 
+```{r,echo=FALSE,comment=NA,results='hide'}
+  setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
+```
 
 ```{r Import Data}
-# setwd("/Users/yogisharo/Documents/GitHub/")
-wage_data <- read.csv("indonesia-regional-wage-map/minimum_wage_data.csv", sep = ";")
+wage_data <- read.csv("minimum_wage_data.csv", sep = ";")
 location_data <- read.csv("city_latlong.csv", sep = ",")
-
 ```
 
 
@@ -89,12 +90,9 @@ map = df %>%
                               'Rp', formatC(df$wage, big.mark = ',', format = 'fg')
                             ))) %>%
   addLegend(
-    "bottomleft",
-    # Legend position
-    pal = mypalette,
-    # color palette
-    values =  ~ mybins,
-    # legend values
+    "bottomleft", # Legend position
+    pal = mypalette,  # color palette
+    values =  ~ mybins,  # legend values
     opacity = 0.6,
     title = "Wage Range"
   )
