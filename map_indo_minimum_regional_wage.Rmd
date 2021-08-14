@@ -30,8 +30,8 @@ library(htmlwidgets)
 ```
 
 ```{r Import Data}
-wage_data <- read.csv("minimum_wage_data.csv", sep = ";")
-location_data <- read.csv("city_latlong.csv", sep = ",")
+wage_data <- read.csv("province_wage_data.csv", sep = ";")
+location_data <- read.csv("province_latlong.csv", sep = ",")
 ```
 
 
@@ -51,8 +51,8 @@ df <- wage_data %>%
   group_by(province) %>%
   mutate(rank = row_number()) %>%
   ungroup() %>%
-  dplyr::filter(rank == 1) %>%
-  subset(province != "INDONESIA") %>% mutate(wage = as.numeric(wage))
+  dplyr::filter(rank == 1) %>% #remove duplicate from wage by regional city
+  subset(province != "INDONESIA") %>% mutate(wage = as.numeric(wage)) # This is not the province
   
 ```
 
