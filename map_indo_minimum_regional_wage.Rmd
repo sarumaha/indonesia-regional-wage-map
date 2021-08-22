@@ -1,5 +1,5 @@
 ---
-title: "Starbucks Location"
+title: "Indonesia regional wage"
 output: html_document
 ---
 
@@ -13,17 +13,6 @@ library(leaflet)
 #https://www.bps.go.id/linkTableDinamis/view/id/917
 Get latlong data here https://docs.google.com/spreadsheets/d/1VTE-D3Tv5ESdkvYDCi_71rJUOTHZ0HogWO_wZ0QOcrA/edit?usp=sharing
 
-```{r}
-library(dplyr)
-library(ggplot2)
-library(rjson)
-library(jsonlite)
-library(leaflet)
-library(RCurl)
-library(htmltools) 
-library(tidyverse)
-library(htmlwidgets)
-```
 
 ```{r,echo=FALSE,comment=NA,results='hide'}
   setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
@@ -97,4 +86,5 @@ map = df %>%
     title = "Wage Range"
   )
 
+map
 ```
