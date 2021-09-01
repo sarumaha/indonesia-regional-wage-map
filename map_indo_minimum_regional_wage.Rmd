@@ -9,13 +9,9 @@ library(dplyr)
 library(leaflet)
 ```
 
-## R Markdown
-#https://www.bps.go.id/linkTableDinamis/view/id/917
-Get latlong data here https://docs.google.com/spreadsheets/d/1VTE-D3Tv5ESdkvYDCi_71rJUOTHZ0HogWO_wZ0QOcrA/edit?usp=sharing
-
 
 ```{r,echo=FALSE,comment=NA,results='hide'}
-  setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
+setwd("/Users/yogisharo/Documents/GitHub/indonesia-regional-wage-map/")
 ```
 
 ```{r Import Data}
@@ -46,7 +42,7 @@ df <- wage_data %>%
 ```
 
 
-```{r}
+```{r map attributes & Visualization}
 mybins <- seq(min(df$wage) * 0.9, max(df$wage) * 1.2, by = 500000) #create color spectrum
 mypalette <- colorBin(
   palette = "YlOrBr",
