@@ -47,7 +47,7 @@ df <- wage_data %>%
 
 
 ```{r}
-mybins <- seq(min(df$wage) * 0.9, max(df$wage) * 1.2, by = 500000)
+mybins <- seq(min(df$wage) * 0.9, max(df$wage) * 1.2, by = 500000) #create color spectrum
 mypalette <- colorBin(
   palette = "YlOrBr",
   domain = df$wage,
@@ -76,7 +76,7 @@ map = df %>%
   ) %>%
   addMarkers(popup = paste0(df$province, ' : ',
                             paste(
-                              'Rp', formatC(df$wage, big.mark = ',', format = 'fg')
+                              'Rp', formatC(df$wage, big.mark = ',', format = 'fg') ## Add Rupiah Currency format
                             ))) %>%
   addLegend(
     "bottomleft", # Legend position
