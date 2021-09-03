@@ -22,22 +22,22 @@ location_data <- read.csv("province_latlong.csv", sep = ",")
 
 ```{r Data Cleaning}
 wage_data <- wage_data %>%
-  dplyr::filter(nama_tahun == 2016) %>%
-  dplyr::select(province = nama_item_vertical_variabel,
-                wage = data_content)
+  dplyr::filter(nama_tahun == 2016) %>% ##Filter year
+  dplyr::select(province = nama_item_vertical_variabel, ##Select the province name & Wage (Rp) column
+                wage = data_content) 
 
 
 
 df <- wage_data %>%
-  dplyr::left_join(location_data %>%
+  dplyr::left_join(location_data %>% ##Join province name from wage_data and location_ data
                      mutate(province = toupper(admin_name)) %>%
                      select(province, lat, lng),
                    by = "province") %>%
   group_by(province) %>%
   mutate(rank = row_number()) %>%
   ungroup() %>%
-  dplyr::filter(rank == 1) %>% #remove duplicate from wage by regional city
-  subset(province != "INDONESIA") %>% mutate(wage = as.numeric(wage)) # This is not the province
+  dplyr::filter(rank == 1) %>% ##remove duplicate from wage by regional city, we'll only obtain the province wage
+  subset(province != "INDONESIA") %>% mutate(wage = as.numeric(wage)) ## Remove Indonesia, this is not a province
   
 ```
 
