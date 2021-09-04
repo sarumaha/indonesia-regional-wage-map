@@ -4,7 +4,6 @@ output: html_document
 ---
 
 ```{r Import Library}
-library(RDSTK)
 library(dplyr)
 library(leaflet)
 ```
@@ -44,7 +43,7 @@ df <- wage_data %>%
 
 ```{r map attributes & Visualization}
 mybins <- seq(min(df$wage) * 0.9, max(df$wage) * 1.2, by = 500000) #create color spectrum
-mypalette <- colorBin(
+mypalette <- colorBin( #Set palette 
   palette = "YlOrBr",
   domain = df$wage,
   na.color = "transparent",
@@ -54,8 +53,8 @@ mypalette <- colorBin(
 map = df %>%
   leaflet() %>%
   addTiles() %>%
-  addProviderTiles("CartoDB.Positron") %>%
-  addCircleMarkers(
+  addProviderTiles("CartoDB.Positron") %>% #Setting base map, there are other base maps avaiable
+  addCircleMarkers( #Add circle mark to highlight province wage range in colors
     ~ lng,
     ~ lat,
     fillColor = ~ mypalette(wage),
@@ -70,7 +69,7 @@ map = df %>%
       direction = "auto"
     )
   ) %>%
-  addMarkers(popup = paste0(df$province, ' : ',
+  addMarkers(popup = paste0(df$province, ' : ', #Add markers along with province 
                             paste(
                               'Rp', formatC(df$wage, big.mark = ',', format = 'fg') ## Add Rupiah Currency format
                             ))) %>%
