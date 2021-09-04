@@ -78,7 +78,7 @@ map = df %>%
     pal = mypalette,  # color palette
     values =  ~ mybins,  # legend values
     opacity = 0.6,
-    title = "Wage Range"
+    title = "Regional Minimum Wage Range"
   )
 
 map
